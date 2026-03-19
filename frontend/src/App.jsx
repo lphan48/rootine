@@ -3,9 +3,12 @@ import TimerDisplay from "./components/Timer/TimerDisplay"
 import AuthForm from "./components/Auth/AuthForm"
 import GardenGrid from "./components/Garden/GardenGrid"
 import { useTimerStore } from "./store/timerStore"
+import { getActivePlant } from "./api/plants"
 
 export default function App() {
   const [username, setUsername] = useState(null)
+  const [activePlant, setActivePlant] = useState(null)
+  const [plantLoading, setPlantLoading] = useState(false)
   const sessionCount = useTimerStore((state) => state.sessionCount)
 
   useEffect(() => {
@@ -17,7 +20,36 @@ export default function App() {
     localStorage.removeItem("token")
     localStorage.removeItem("username")
     setUsername(null)
+    setActivePlant(null)
   }
+
+  useEffect(() => {
+    if (!username) return
+
+    let cancelled = false
+    const fetchActivePlant = async () => {
+      try {
+        setPlantLoading(true)
+        const response = await getActivePlant()
+        if (!cancelled) {
+          setActivePlant(response.data.active_plant)
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setActivePlant(null)
+        }
+      } finally {
+        if (!cancelled) {
+          setPlantLoading(false)
+        }
+      }
+    }
+
+    fetchActivePlant()
+    return () => {
+      cancelled = true
+    }
+  }, [username, sessionCount])
 
   if (!username) {
     return <AuthForm onLogin={setUsername} />
@@ -45,7 +77,7 @@ export default function App() {
               <TimerDisplay />
             </div>
           <div className="flex-1 w-full">
-            <GardenGrid sessionCount={sessionCount} />
+            <GardenGrid activePlant={activePlant} isLoading={plantLoading} />
           </div>
           </div>
         </div>

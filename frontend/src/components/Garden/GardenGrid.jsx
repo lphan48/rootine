@@ -1,23 +1,9 @@
-const PLANTS = [
-  { name: 'Sprout', icon: '🌱', unlockAt: 1 },
-  { name: 'Bamboo', icon: '🎋', unlockAt: 2 },
-  { name: 'Clover', icon: '☘️', unlockAt: 3 },
-  { name: 'Cactus', icon: '🌵', unlockAt: 4 },
-  { name: 'Tulip', icon: '🌷', unlockAt: 5 },
-  { name: 'Herb', icon: '🌿', unlockAt: 6 },
-  { name: 'Maple', icon: '🍁', unlockAt: 8 },
-  { name: 'Blossom', icon: '🌸', unlockAt: 10 },
-  { name: 'Sunflower', icon: '🌻', unlockAt: 12 },
-  { name: 'Palm', icon: '🌴', unlockAt: 14 },
-  { name: 'Bouquet', icon: '💐', unlockAt: 16 },
-  { name: 'Evergreen', icon: '🌲', unlockAt: 20 },
-]
+export default function GardenGrid({ activePlant, isLoading }) {
+  const formattedStage = activePlant?.stage ? activePlant.stage.replace('_', ' ') : ''
+  const unlockedLabel = activePlant?.unlocked_at
+    ? new Date(activePlant.unlocked_at).toLocaleString()
+    : 'Unknown'
 
-const GRID_COLS = 5
-const GRID_ROWS = 4
-const TOTAL_PLOTS = GRID_COLS * GRID_ROWS
-
-export default function GardenGrid({ sessionCount }) {
   return (
     <div className="flex flex-col gap-4 ml-20">
       <div>
@@ -27,19 +13,35 @@ export default function GardenGrid({ sessionCount }) {
               className="h-full w-full grid grid-cols-5 gap-2 rounded-xl border-2 border-amber-900 bg-amber-700 p-3 shadow-inner"
               style={{ transform: 'rotateX(58deg)', transformOrigin: 'center bottom' }}
             >
-              {Array.from({ length: TOTAL_PLOTS }).map((_, index) => {
-                const plant = PLANTS[index]
-                const unlocked = plant ? sessionCount >= plant.unlockAt : false
+              {Array.from({ length: 20 }).map((_, index) => (
+                <div
+                  key={`soil-${index}`}
+                  className="rounded-md border border-amber-900/70 bg-amber-800 shadow-inner"
+                />
+              ))}
+            </div>
+          </div>
 
-                return (
-                  <div
-                    key={`soil-${index}`}
-                    className={`rounded-md border border-amber-900/70 shadow-inner ${
-                      unlocked ? 'bg-amber-800' : 'bg-amber-900/90'
-                    }`}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-2 text-center">
+              {isLoading ? (
+                <p className="text-sm text-gray-500">Loading plant...</p>
+              ) : activePlant?.image_url ? (
+                <div className="relative group">
+                  <img
+                    src={activePlant.image_url}
+                    alt={`${activePlant.plant_type_name} ${activePlant.stage}`}
+                    className="w-28 h-28 object-contain drop-shadow-md"
                   />
-                )
-              })}
+                  <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 rounded-lg bg-white/95 border border-gray-200 px-3 py-2 text-xs text-gray-700 shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <p className="font-semibold text-gray-800">{activePlant.plant_type_name}</p>
+                    <p>Stage: {formattedStage}</p>
+                    <p>Unlocked: {unlockedLabel}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">No active plant yet.</p>
+              )}
             </div>
           </div>
         </div>

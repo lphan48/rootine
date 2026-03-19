@@ -5,6 +5,7 @@ from .. import models, auth as auth_utils
 from pydantic import BaseModel, EmailStr
 
 router = APIRouter()
+STARTER_PLANT_KEY = "sunflower"
 
 class RegisterRequest(BaseModel):
     username: str
@@ -19,12 +20,29 @@ class LoginRequest(BaseModel):
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.email == body.email).first():
         raise HTTPException(400, "Email already registered")
+
+    starter_plant_type = db.query(models.PlantType).filter_by(key=STARTER_PLANT_KEY).first()
+    if not starter_plant_type:
+        raise HTTPException(500, "Starter plant type is not configured")
+
     user = models.User(
         username=body.username,
         email=body.email,
         hashed_password=auth_utils.hash_password(body.password)
     )
     db.add(user)
+
+    db.flush()
+
+    starter_plant = models.Plant(
+        user_id=user.id,
+        plant_type_id=starter_plant_type.id,
+        stage=models.PlantStage.seed,
+        plant_xp=0,
+        is_active=True,
+    )
+    db.add(starter_plant)
+
     db.commit()
     db.refresh(user)
     token = auth_utils.create_token({"sub": str(user.id)})
