@@ -28,36 +28,45 @@ def _stage_asset_path(plant_type: models.PlantType, stage: models.PlantStage) ->
 
 
 @router.get("/active")
-def get_active_plant(
+def get_user_plants(
     request: Request,
     db: Session = Depends(get_db),
     user: models.User = Depends(auth_utils.get_current_user),
 ):
-    active_plant = (
+    user_plants = (
         db.query(models.Plant)
         .options(joinedload(models.Plant.plant_type).joinedload(models.PlantType.stage_assets))
-        .filter(models.Plant.user_id == user.id, models.Plant.is_active.is_(True))
-        .first()
+        .filter(models.Plant.user_id == user.id)
+        .order_by(models.Plant.planted_at.asc())
+        .all()
     )
 
-    if not active_plant:
-        return {"active_plant": None, "account_xp": user.account_xp}
-
-    image_path = _stage_asset_path(active_plant.plant_type, active_plant.stage)
-    return {
-        "account_xp": user.account_xp,
-        "active_plant": {
-            "plant_id": str(active_plant.id),
-            "plant_type_id": str(active_plant.plant_type_id),
-            "plant_type_key": active_plant.plant_type.key,
-            "plant_type_name": active_plant.plant_type.name,
-            "stage": active_plant.stage.value,
-            "plant_xp": active_plant.plant_xp,
-            "growth_target_xp": active_plant.plant_type.growth_target_xp,
-            "unlocked_at": active_plant.planted_at.isoformat() if active_plant.planted_at else None,
+    plants_payload = []
+    active_payload = None
+    for plant in user_plants:
+        image_path = _stage_asset_path(plant.plant_type, plant.stage)
+        plant_payload = {
+            "plant_id": str(plant.id),
+            "plant_type_id": str(plant.plant_type_id),
+            "plant_type_key": plant.plant_type.key,
+            "plant_type_name": plant.plant_type.name,
+            "stage": plant.stage.value,
+            "plant_xp": plant.plant_xp,
+            "growth_target_xp": plant.plant_type.growth_target_xp,
+            "is_active": plant.is_active,
+            "unlocked_at": plant.planted_at.isoformat() if plant.planted_at else None,
             "image_path": image_path,
             "image_url": _to_absolute_url(request, image_path),
-        },
+        }
+        plants_payload.append(plant_payload)
+
+        if plant.is_active and active_payload is None:
+            active_payload = plant_payload
+
+    return {
+        "account_xp": user.account_xp,
+        "plants": plants_payload,
+        "active_plant": active_payload,
     }
 
 
