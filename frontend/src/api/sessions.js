@@ -10,7 +10,10 @@ api.interceptors.request.use(config => {
 })
 
 export const startSession = (type = 'focus') =>
-  api.post('/sessions/start', { session_type: type, duration_minutes: type === 'focus' ? 25 : 5 })
+  api.post('/sessions/start', {
+    session_type: type,
+    duration_minutes: type === 'focus' ? 25 : type === 'short_break' ? 5 : 15,
+  })
 
 export const completeSession = (id) =>
   api.patch(`/sessions/${id}/complete`)

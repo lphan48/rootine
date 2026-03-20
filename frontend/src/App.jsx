@@ -4,14 +4,22 @@ import AuthForm from "./components/Auth/AuthForm"
 import GardenGrid from "./components/Garden/GardenGrid"
 import Navbar from "./components/Navbar"
 import { useTimerStore } from "./store/timerStore"
-import { getActivePlant } from "./api/plants"
+import PlantsTab from "./components/Plants/PlantsTab"
+import ProfileTab from "./components/Profile/ProfileTab"
+import { getActivePlant, getPlantTypes } from "./api/plants"
+import { getProfileStats } from "./api/profile"
 
 export default function App() {
   const tabs = ["garden", "plants", "profile"]
   const [username, setUsername] = useState(null)
   const [activeTab, setActiveTab] = useState("garden")
   const [plants, setPlants] = useState([])
+  const [plantTypes, setPlantTypes] = useState([])
+  const [accountXp, setAccountXp] = useState(0)
+  const [profileStats, setProfileStats] = useState(null)
   const [plantLoading, setPlantLoading] = useState(false)
+  const [plantTypesLoading, setPlantTypesLoading] = useState(false)
+  const [profileLoading, setProfileLoading] = useState(false)
   const sessionCount = useTimerStore((state) => state.sessionCount)
 
   useEffect(() => {
@@ -25,31 +33,50 @@ export default function App() {
     setUsername(null)
     setActiveTab("garden")
     setPlants([])
+    setPlantTypes([])
+    setAccountXp(0)
+    setProfileStats(null)
   }
 
   useEffect(() => {
     if (!username) return
 
     let cancelled = false
-    const fetchUserPlants = async () => {
+    const fetchUserData = async () => {
       try {
         setPlantLoading(true)
-        const response = await getActivePlant()
+        setPlantTypesLoading(true)
+        setProfileLoading(true)
+
+        const [plantsResponse, plantTypesResponse, profileResponse] = await Promise.all([
+          getActivePlant(),
+          getPlantTypes(),
+          getProfileStats(),
+        ])
+
         if (!cancelled) {
-          setPlants(response.data.plants || [])
+          setPlants(plantsResponse.data.plants || [])
+          setPlantTypes(plantTypesResponse.data.plant_types || [])
+          setAccountXp(plantTypesResponse.data.account_xp || 0)
+          setProfileStats(profileResponse.data || null)
         }
       } catch (error) {
         if (!cancelled) {
           setPlants([])
+          setPlantTypes([])
+          setAccountXp(0)
+          setProfileStats(null)
         }
       } finally {
         if (!cancelled) {
           setPlantLoading(false)
+          setPlantTypesLoading(false)
+          setProfileLoading(false)
         }
       }
     }
 
-    fetchUserPlants()
+    fetchUserData()
     return () => {
       cancelled = true
     }
@@ -89,15 +116,15 @@ export default function App() {
         ) : null}
 
         {activeTab === "plants" ? (
-          <div className="w-full max-w-6xl bg-white rounded-2xl shadow-md p-10 text-center text-gray-500">
-            Plants page coming soon.
-          </div>
+          <PlantsTab
+            plantTypes={plantTypes}
+            accountXp={accountXp}
+            isLoading={plantTypesLoading}
+          />
         ) : null}
 
         {activeTab === "profile" ? (
-          <div className="w-full max-w-6xl bg-white rounded-2xl shadow-md p-10 text-center text-gray-500">
-            Profile page coming soon.
-          </div>
+          <ProfileTab stats={profileStats} isLoading={profileLoading} />
         ) : null}
       </div>
     </div>

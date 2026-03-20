@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from .db import Base, engine
-from .routers import auth, sessions, plants
+from .routers import auth, sessions, plants, profile
 
 Base.metadata.create_all(bind=engine)  # creates tables on startup
 
@@ -24,6 +24,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(sessions.router, prefix="/sessions", tags=["sessions"])
 app.include_router(plants.router, prefix="/plants", tags=["plants"])
+app.include_router(profile.router, prefix="/profile", tags=["profile"])
 
 @app.get("/")
 def root():

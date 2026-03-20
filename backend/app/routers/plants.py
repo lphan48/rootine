@@ -27,6 +27,15 @@ def _stage_asset_path(plant_type: models.PlantType, stage: models.PlantStage) ->
     return _default_stage_svg_path(plant_type.key, stage)
 
 
+def _stage_thresholds(growth_target_xp: int) -> dict:
+    return {
+        "seed": 0,
+        "sprout": 100,
+        "small_plant": 250,
+        "mature_plant": growth_target_xp,
+    }
+
+
 @router.get("/active")
 def get_user_plants(
     request: Request,
@@ -100,6 +109,7 @@ def list_plant_types(
                 "name": plant_type.name,
                 "unlock_account_xp": plant_type.unlock_account_xp,
                 "growth_target_xp": plant_type.growth_target_xp,
+                "stage_thresholds": _stage_thresholds(plant_type.growth_target_xp),
                 "is_unlocked": user.account_xp >= plant_type.unlock_account_xp,
                 "stage_assets": stage_assets,
             }
