@@ -1,4 +1,15 @@
 export default function PlantsTab({ plantTypes = [], accountXp = 0, isLoading }) {
+  const plantTypeColorMap = {
+    cactus: "#4ba750",
+    sunflower: "#F9A825",
+    tomato: "#D84315",
+  }
+
+  const getAccentColor = (plantType) => {
+    const plantTypeKey = (plantType.plant_type_key || plantType.name || "").toLowerCase()
+    return Object.entries(plantTypeColorMap).find(([key]) => plantTypeKey.includes(key))?.[1] || "#6B7280"
+  }
+
   if (isLoading) {
     return (
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-md p-10 text-center text-gray-500">
@@ -13,9 +24,14 @@ export default function PlantsTab({ plantTypes = [], accountXp = 0, isLoading })
         const xpToUnlock = Math.max(0, plantType.unlock_account_xp - accountXp)
         const matureAsset = plantType.stage_assets?.mature_plant
         const thresholds = plantType.stage_thresholds || {}
+        const accentColor = getAccentColor(plantType)
 
         return (
-          <div key={plantType.plant_type_id} className="bg-white rounded-2xl shadow-md p-5">
+          <div
+            key={plantType.plant_type_id}
+            className="bg-white rounded-2xl shadow-md p-5 border-2"
+            style={{ borderColor: accentColor }}
+          >
             <div className="flex items-center gap-4">
               <img
                 src={`${matureAsset?.image_url || ''}?v=3`}
@@ -23,7 +39,7 @@ export default function PlantsTab({ plantTypes = [], accountXp = 0, isLoading })
                 className="w-20 h-20 object-contain"
               />
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">{plantType.name}</h3>
+                <h3 className="text-lg font-semibold" style={{ color: accentColor }}>{plantType.name}</h3>
                 <p className="text-sm text-gray-500">
                   {plantType.is_unlocked ? 'Unlocked' : `Locked • Need ${xpToUnlock} more XP`}
                 </p>

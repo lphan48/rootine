@@ -9,7 +9,7 @@ export default function Navbar({
 }) {
   return (
     <nav className="w-full bg-white shadow-sm border-b border-gray-100">
-      <div className="w-full max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+      <div className="w-full max-w-6xl mx-auto px-2 py-6 flex items-center justify-between gap-4">
         <h1 className="text-xl font-bold text-green-700 px-2">🌿 Rootine</h1>
 
         <div className="flex items-center gap-2">
@@ -19,7 +19,7 @@ export default function Navbar({
               onClick={() => onTabChange(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
                 activeTab === tab
-                  ? "bg-green-100 text-green-800"
+                  ? "bg-green-100 text-green-800 font-semibold"
                   : "text-gray-500 hover:bg-gray-100"
               }`}
             >
@@ -30,10 +30,10 @@ export default function Navbar({
 
         <div className="relative flex items-center gap-3 px-2">
           <div className="relative group">
-            <span className="text-sm text-gray-500 cursor-default">Hi, {username}!</span>
+            <span className="font-semibold text-sm text-green-700 cursor-default">Hi, {username}!</span>
 
             <div className="pointer-events-none absolute right-0 top-full mt-2 w-56 rounded-xl border border-gray-200 bg-white p-3 shadow-lg opacity-0 translate-y-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Profile Stats</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-green-700 mb-2">Profile Stats</h3>
 
               {profileLoading ? (
                 <p className="text-sm text-gray-500">Loading profile...</p>
