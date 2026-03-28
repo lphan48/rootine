@@ -5,12 +5,11 @@ import GardenGrid from "./components/Garden/GardenGrid"
 import Navbar from "./components/Navbar"
 import { useTimerStore } from "./store/timerStore"
 import PlantsTab from "./components/Plants/PlantsTab"
-import ProfileTab from "./components/Profile/ProfileTab"
 import { getActivePlant, getPlantTypes } from "./api/plants"
 import { getProfileStats } from "./api/profile"
 
 export default function App() {
-  const tabs = ["garden", "plants", "profile"]
+  const tabs = ["garden", "plants"]
   const [username, setUsername] = useState(null)
   const [activeTab, setActiveTab] = useState("garden")
   const [plants, setPlants] = useState([])
@@ -93,6 +92,8 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         username={username}
+        profileStats={profileStats}
+        profileLoading={profileLoading}
         onLogout={handleLogout}
       />
 
@@ -121,10 +122,6 @@ export default function App() {
             accountXp={accountXp}
             isLoading={plantTypesLoading}
           />
-        ) : null}
-
-        {activeTab === "profile" ? (
-          <ProfileTab stats={profileStats} isLoading={profileLoading} />
         ) : null}
       </div>
     </div>

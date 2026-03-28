@@ -53,7 +53,7 @@ export default function PlantPlacementLayer({ plants = [], positions = [] }) {
           >
             <div className="relative group">
               <img
-                src={`${plant.image_url}?v=2`}
+                src={`${plant.image_url}?v=3`}
                 alt={`${plant.plant_type_name} ${plant.stage}`}
                 className="block drop-shadow-md max-w-none"
               />

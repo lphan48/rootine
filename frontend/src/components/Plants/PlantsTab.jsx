@@ -18,7 +18,7 @@ export default function PlantsTab({ plantTypes = [], accountXp = 0, isLoading })
           <div key={plantType.plant_type_id} className="bg-white rounded-2xl shadow-md p-5">
             <div className="flex items-center gap-4">
               <img
-                src={`${matureAsset?.image_url || ''}?v=2`}
+                src={`${matureAsset?.image_url || ''}?v=3`}
                 alt={`${plantType.name} mature stage`}
                 className="w-20 h-20 object-contain"
               />
