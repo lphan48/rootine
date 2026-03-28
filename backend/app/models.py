@@ -43,8 +43,11 @@ class PlantType(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     key = Column(String, unique=True, nullable=False)
     name = Column(String, unique=True, nullable=False)
+    sprout_threshold_xp = Column(Integer, default=100, nullable=False)
+    small_plant_threshold_xp = Column(Integer, default=250, nullable=False)
     growth_target_xp = Column(Integer, default=500, nullable=False)
     unlock_account_xp = Column(Integer, default=0, nullable=False)
+    unlock_requires_plant_key = Column(String, nullable=True)
     plants = relationship("Plant", back_populates="plant_type")
     stage_assets = relationship("PlantStageAsset", back_populates="plant_type")
 

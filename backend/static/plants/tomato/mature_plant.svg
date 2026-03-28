@@ -1,0 +1,41 @@
+<svg width="130" height="210" viewBox="0 0 130 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="62" y="30" width="6" height="170" fill="#689F38" rx="3" />
+
+  <rect x="34" y="70" width="28" height="4" fill="#689F38" rx="2" />
+  <rect x="68" y="82" width="28" height="4" fill="#689F38" rx="2" />
+  <rect x="38" y="110" width="24" height="4" fill="#689F38" rx="2" />
+  <rect x="68" y="130" width="26" height="4" fill="#689F38" rx="2" />
+
+  <path d="M 36 67 L 28 64 L 22 67 L 25 70 L 36 68" fill="#7CB342" stroke="#689F38" stroke-width="1.5" />
+  <path d="M 50 67 L 56 64 L 60 67 L 54 70 L 50 68" fill="#7CB342" stroke="#689F38" stroke-width="1.5" />
+
+  <path d="M 76 79 L 82 76 L 88 79 L 85 82 L 76 80" fill="#7CB342" stroke="#689F38" stroke-width="1.5" />
+  <path d="M 92 79 L 100 76 L 106 79 L 98 82 L 92 80" fill="#7CB342" stroke="#689F38" stroke-width="1.5" />
+
+  <path d="M 40 107 L 32 104 L 26 107 L 29 110 L 40 108" fill="#7CB342" stroke="#689F38" stroke-width="1.5" />
+
+  <path d="M 84 127 L 92 124 L 98 127 L 94 130 L 84 128" fill="#7CB342" stroke="#689F38" stroke-width="1.5" />
+
+  <path d="M 62 155 Q 44 152 38 158 Q 44 162 62 157" fill="#8BC34A" stroke="#689F38" stroke-width="1.5" />
+  <path d="M 68 158 Q 86 155 92 161 Q 86 165 68 160" fill="#8BC34A" stroke="#689F38" stroke-width="1.5" />
+
+  <circle cx="40" cy="76" r="11" fill="#E53935" />
+  <circle cx="40" cy="76" r="11" fill="#D32F2F" opacity="0.5" />
+  <path d="M 40 70 L 37 67 L 40 67 L 43 67 L 40 70" fill="#7CB342" />
+
+  <circle cx="82" cy="92" r="11" fill="#EF5350" />
+  <circle cx="82" cy="92" r="11" fill="#D32F2F" opacity="0.4" />
+  <path d="M 82 86 L 79 83 L 82 83 L 85 83 L 82 86" fill="#7CB342" />
+
+  <circle cx="65" cy="42" r="10" fill="#FF5252" />
+  <circle cx="65" cy="42" r="10" fill="#D32F2F" opacity="0.3" />
+  <path d="M 65 36 L 62 33 L 65 33 L 68 33 L 65 36" fill="#7CB342" />
+
+  <circle cx="42" cy="116" r="11" fill="#E53935" />
+  <circle cx="42" cy="116" r="11" fill="#D32F2F" opacity="0.45" />
+  <path d="M 42 110 L 39 107 L 42 107 L 45 107 L 42 110" fill="#7CB342" />
+
+  <circle cx="85" cy="138" r="10.5" fill="#EF5350" />
+  <circle cx="85" cy="138" r="10.5" fill="#D32F2F" opacity="0.35" />
+  <path d="M 85 131 L 82 128 L 85 128 L 88 128 L 85 131" fill="#7CB342" />
+</svg>

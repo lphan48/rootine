@@ -27,13 +27,27 @@ def _stage_asset_path(plant_type: models.PlantType, stage: models.PlantStage) ->
     return _default_stage_svg_path(plant_type.key, stage)
 
 
-def _stage_thresholds(growth_target_xp: int) -> dict:
+def _stage_thresholds(plant_type: models.PlantType) -> dict:
     return {
         "seed": 0,
-        "sprout": 100,
-        "small_plant": 250,
-        "mature_plant": growth_target_xp,
+        "sprout": plant_type.sprout_threshold_xp,
+        "small_plant": plant_type.small_plant_threshold_xp,
+        "mature_plant": plant_type.growth_target_xp,
     }
+
+
+def _is_type_unlocked(
+    plant_type: models.PlantType,
+    account_xp: int,
+    mature_by_type_key: set,
+) -> bool:
+    if account_xp < plant_type.unlock_account_xp:
+        return False
+
+    if not plant_type.unlock_requires_plant_key:
+        return True
+
+    return plant_type.unlock_requires_plant_key in mature_by_type_key
 
 
 @router.get("/active")
@@ -85,6 +99,18 @@ def list_plant_types(
     db: Session = Depends(get_db),
     user: models.User = Depends(auth_utils.get_current_user),
 ):
+    user_plants = (
+        db.query(models.Plant)
+        .options(joinedload(models.Plant.plant_type))
+        .filter(models.Plant.user_id == user.id)
+        .all()
+    )
+    mature_by_type_key = {
+        plant.plant_type.key
+        for plant in user_plants
+        if plant.stage == models.PlantStage.mature_plant
+    }
+
     plant_types = (
         db.query(models.PlantType)
         .options(joinedload(models.PlantType.stage_assets))
@@ -108,9 +134,10 @@ def list_plant_types(
                 "key": plant_type.key,
                 "name": plant_type.name,
                 "unlock_account_xp": plant_type.unlock_account_xp,
+                "unlock_requires_plant_key": plant_type.unlock_requires_plant_key,
                 "growth_target_xp": plant_type.growth_target_xp,
-                "stage_thresholds": _stage_thresholds(plant_type.growth_target_xp),
-                "is_unlocked": user.account_xp >= plant_type.unlock_account_xp,
+                "stage_thresholds": _stage_thresholds(plant_type),
+                "is_unlocked": _is_type_unlocked(plant_type, user.account_xp, mature_by_type_key),
                 "stage_assets": stage_assets,
             }
         )

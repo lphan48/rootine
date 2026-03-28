@@ -10,12 +10,12 @@ router = APIRouter()
 XP_PER_COMPLETED_POMODORO = 50
 
 
-def get_plant_stage(plant_xp: int, growth_target_xp: int) -> models.PlantStage:
-    if plant_xp >= growth_target_xp:
+def get_plant_stage(plant_xp: int, plant_type: models.PlantType) -> models.PlantStage:
+    if plant_xp >= plant_type.growth_target_xp:
         return models.PlantStage.mature_plant
-    if plant_xp >= 250:
+    if plant_xp >= plant_type.small_plant_threshold_xp:
         return models.PlantStage.small_plant
-    if plant_xp >= 100:
+    if plant_xp >= plant_type.sprout_threshold_xp:
         return models.PlantStage.sprout
     return models.PlantStage.seed
 
@@ -71,7 +71,7 @@ def complete_session(session_id: str, db: Session = Depends(get_db),
             growth_target = active_plant.plant_type.growth_target_xp
             next_plant_xp = min(active_plant.plant_xp + xp, growth_target)
             active_plant.plant_xp = next_plant_xp
-            active_plant.stage = get_plant_stage(next_plant_xp, growth_target)
+            active_plant.stage = get_plant_stage(next_plant_xp, active_plant.plant_type)
             if next_plant_xp >= growth_target and active_plant.completed_at is None:
                 active_plant.completed_at = datetime.utcnow()
 

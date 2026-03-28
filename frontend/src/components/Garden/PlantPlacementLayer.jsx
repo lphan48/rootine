@@ -32,12 +32,6 @@ function mapPlantsToPlots(plants) {
   return placement
 }
 
-function getPlantSize(stage) {
-  if (stage === "mature_plant") return 96
-  if (stage === "small_plant") return 74
-  return 56
-}
-
 export default function PlantPlacementLayer({ plants = [], positions = [] }) {
   const plantsByPlot = mapPlantsToPlots(plants)
 
@@ -46,8 +40,6 @@ export default function PlantPlacementLayer({ plants = [], positions = [] }) {
       {positions.map((pos, index) => {
         const plant = plantsByPlot.get(index)
         if (!plant) return null
-
-        const plantSize = getPlantSize(plant.stage)
 
         return (
           <div
@@ -63,8 +55,7 @@ export default function PlantPlacementLayer({ plants = [], positions = [] }) {
               <img
                 src={`${plant.image_url}?v=2`}
                 alt={`${plant.plant_type_name} ${plant.stage}`}
-                className="object-contain drop-shadow-md"
-                style={{ width: `${plantSize}px`, height: `${plantSize}px` }}
+                className="block drop-shadow-md max-w-none"
               />
               <PlantHoverPopup plant={plant} />
             </div>
