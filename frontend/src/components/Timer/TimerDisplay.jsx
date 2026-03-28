@@ -14,7 +14,6 @@ export default function TimerDisplay() {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* tabs */}
       <div className="flex gap-2 text-sm">
         {['focus', 'short_break', 'long_break'].map(m => (
           <button key={m}
@@ -25,18 +24,18 @@ export default function TimerDisplay() {
         ))}
       </div>
 
-      {/* timer */}
-      <svg width="220" height="220" className="-rotate-90">
-        <circle cx="110" cy="110" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="10" />
-        <circle cx="110" cy="110" r={radius} fill="none" stroke="#86efac" strokeWidth="10"
-          strokeDasharray={circumference} strokeDashoffset={dashOffset}
-          strokeLinecap="round" className="transition-all duration-1000" />
-      </svg>
-      <div className="text-5xl font-mono font-bold -mt-36 mb-24 text-gray-700">
-        {minutes}:{seconds}
+      <div className="relative h-[220px] w-[220px] mb-8">
+        <svg width="220" height="220" className="-rotate-90">
+          <circle cx="110" cy="110" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="6" />
+          <circle cx="110" cy="110" r={radius} fill="none" stroke="#86efac" strokeWidth="6"
+            strokeDasharray={circumference} strokeDashoffset={dashOffset}
+            strokeLinecap="round" className="transition-all duration-1000" />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center text-5xl font-sans font-semibold text-gray-700">
+          {minutes}:{seconds}
+        </div>
       </div>
 
-      {/* controls */}
       <div className="flex gap-3">
         <button onClick={reset} className="px-4 py-2 rounded-xl border text-gray-500">Reset</button>
         <button onClick={isRunning ? pause : start}
@@ -45,7 +44,6 @@ export default function TimerDisplay() {
         </button>
       </div>
 
-      {/* session dots */}
       <div className="flex gap-2 mt-2">
         {[0,1,2,3].map(i => (
           <div key={i} className={`w-3 h-3 rounded-full ${i < sessionCount % 4 ? 'bg-green-400' : 'bg-gray-200'}`} />

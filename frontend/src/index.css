@@ -33,6 +33,27 @@ body {
   min-height: 100vh;
 }
 
+@keyframes gardenIntroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.garden-intro-entrance {
+  animation: gardenIntroReveal 500ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-intro-entrance {
+    animation: none;
+  }
+}
+
 #root {
   width: 100%;
   min-height: 100vh;

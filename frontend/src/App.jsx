@@ -97,12 +97,12 @@ export default function App() {
         onLogout={handleLogout}
       />
 
-      <div className="flex-1 w-full flex items-center justify-center mt-6 px-4">
+      <div className="flex-1 w-full flex items-start justify-center px-4 mt-20">
         {activeTab === "garden" ? (
           <div className="w-full max-w-6xl flex flex-col gap-6 items-center">
-            <div className="flex flex-col items-center gap-1 text-center">
-              <h2 className="text-lg font-semibold">Your Garden</h2>
-              <p className="text-sm">Complete focus sessions to unlock new plants.</p>
+            <div className="garden-intro-entrance mb-10 w-full max-w-2xl rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-lime-50 px-6 py-4 text-center shadow-sm">
+              <h2 className="mt-1 text-2xl font-extrabold text-emerald-900">Your Garden</h2>
+              <p className="mt-1 text-sm font-medium text-emerald-800">Complete focus sessions to unlock new plants.</p>
             </div>
 
             <div className="w-full flex flex-col lg:flex-row gap-10 items-center">
